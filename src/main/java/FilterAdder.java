@@ -11,27 +11,35 @@ import static java.util.Optional.of;
 
 class FilterAdder {
 
-  public static void main(String[] args) throws IOException {
-    // Build a new authorized API client service.
-    Gmail service = GmailHandler.getGmailService();
+  private final Gmail service;
+  private final String USER_ID = "me";
 
-    String junk = getLabelId("Junk", service).orElseThrow(IllegalArgumentException::new);
-    System.out.println("Created filter " + createFilter(junk, service));
+  public FilterAdder(Gmail gmailService) throws IOException {
+    service = gmailService;
+
+    String junk = getLabelId("Junk").orElseThrow(IllegalArgumentException::new);
+    String filterId = createFilter(junk);
+    System.out.println("Created filter " + filterId);
+    deleteFilter(filterId);
   }
 
-  private static String createFilter(String labelId, Gmail service) throws IOException {
+  private String createFilter(String labelId) throws IOException {
     Filter filter = new Filter()
             .setCriteria(new FilterCriteria()
                     .setTo("/(test\\.02\\.2016\\@foobar.com$)/"))
             .setAction(new FilterAction()
                     .setAddLabelIds(Collections.singletonList(labelId))
                     .setRemoveLabelIds(Arrays.asList("INBOX", "UNREAD")));
-    Filter result = service.users().settings().filters().create("me", filter).execute();
+    Filter result = service.users().settings().filters().create(USER_ID, filter).execute();
     return result.getId();
   }
 
-  private static Optional<String> getLabelId(String name, Gmail service) throws IOException {
-    ListLabelsResponse listResponse = service.users().labels().list("me").execute();
+  private void deleteFilter(String labelId) throws IOException {
+    service.users().settings().filters().delete(USER_ID, labelId).execute();
+  }
+
+  private Optional<String> getLabelId(String name) throws IOException {
+    ListLabelsResponse listResponse = service.users().labels().list(USER_ID).execute();
     List<Label> labels = listResponse.getLabels();
     if (labels.size() == 0) {
       System.out.println("No labels found.");
@@ -45,5 +53,4 @@ class FilterAdder {
     }
     return Optional.empty();
   }
-
 }
