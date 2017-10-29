@@ -100,5 +100,4 @@ class GmailHandler {
             .setApplicationName(APPLICATION_NAME)
             .build();
   }
-
 }
