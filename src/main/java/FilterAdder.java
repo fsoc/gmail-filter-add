@@ -16,14 +16,14 @@ class FilterAdder {
 
   public FilterAdder(Gmail gmailService) throws IOException {
     service = gmailService;
-
-    String junk = getLabelId("Junk").orElseThrow(IllegalArgumentException::new);
-    String filterId = createFilter(junk);
-    System.out.println("Created filter " + filterId);
-    deleteFilter(filterId);
+    //TODO implement filter creation based on date
+    //TODO read emails to find new commands and executed commands
+    //TODO execute command
+    //TODO send email with the result of execution of command
+    //TODO implement command that parses forwarded email and create filter
   }
 
-  private String createFilter(String labelId) throws IOException {
+  public String createFilter(String labelId) throws IOException {
     Filter filter = new Filter()
             .setCriteria(new FilterCriteria()
                     .setTo("/(test\\.02\\.2016\\@foobar.com$)/"))
@@ -34,11 +34,11 @@ class FilterAdder {
     return result.getId();
   }
 
-  private void deleteFilter(String labelId) throws IOException {
+  public void deleteFilter(String labelId) throws IOException {
     service.users().settings().filters().delete(USER_ID, labelId).execute();
   }
 
-  private Optional<String> getLabelId(String name) throws IOException {
+  public Optional<String> getLabelId(String name) throws IOException {
     ListLabelsResponse listResponse = service.users().labels().list(USER_ID).execute();
     List<Label> labels = listResponse.getLabels();
     if (labels.size() == 0) {
