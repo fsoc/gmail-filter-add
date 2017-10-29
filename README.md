@@ -1,4 +1,6 @@
-This application tries to help the user remove spam.
+ [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+ 
+ This application tries to help the user remove spam.
 
 When using the service a google apps managed email domain is needed. The script adds to-addresses to a filter based on regex rules.
 Use case:
