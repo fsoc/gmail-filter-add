@@ -5,24 +5,19 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-
-import com.google.api.services.gmail.GmailScopes;
-import com.google.api.services.gmail.model.*;
 import com.google.api.services.gmail.Gmail;
+import com.google.api.services.gmail.GmailScopes;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Optional.of;
-
-public class Quickstart {
+class GmailHandler {
   /**
    * Application name.
    */
@@ -77,11 +72,10 @@ public class Quickstart {
    * Creates an authorized Credential object.
    *
    * @return an authorized Credential object.
-   * @throws IOException
    */
-  public static Credential authorize() throws IOException {
+  private static Credential authorize() throws IOException {
     // Load client secrets.
-    InputStream in = Quickstart.class.getResourceAsStream("/client_secret.json");
+    InputStream in = GmailHandler.class.getResourceAsStream("/client_secret.json");
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
     // Build flow and trigger user authorization request.
@@ -99,48 +93,12 @@ public class Quickstart {
    * Build and return an authorized Gmail client service.
    *
    * @return an authorized Gmail client service
-   * @throws IOException
    */
   public static Gmail getGmailService() throws IOException {
     Credential credential = authorize();
     return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME)
             .build();
-  }
-
-  public static void main(String[] args) throws IOException {
-    // Build a new authorized API client service.
-    Gmail service = getGmailService();
-
-    String junk = getLabelId("Junk", service).orElseThrow(IllegalArgumentException::new);
-    createFilter(junk, service);
-  }
-
-  private static void createFilter(String labelId, Gmail service) throws IOException {
-    Filter filter = new Filter()
-            .setCriteria(new FilterCriteria()
-                    .setTo("/(test\\.02\\.2016\\@foobar.com$)/"))
-            .setAction(new FilterAction()
-                    .setAddLabelIds(Arrays.asList(labelId))
-                    .setRemoveLabelIds(Arrays.asList("INBOX", "UNREAD")));
-    Filter result = service.users().settings().filters().create("me", filter).execute();
-    System.out.println("Created filter " + result.getId());
-  }
-
-  private static Optional<String> getLabelId(String name, Gmail service) throws IOException {
-    ListLabelsResponse listResponse = service.users().labels().list("me").execute();
-    List<Label> labels = listResponse.getLabels();
-    if (labels.size() == 0) {
-      System.out.println("No labels found.");
-    } else {
-      System.out.println("Labels:");
-      for (Label label : labels) {
-        if (label.getName().equals(name)) {
-          return of(label.getId());
-        }
-      }
-    }
-    return Optional.empty();
   }
 
 }
