@@ -94,7 +94,7 @@ class GmailHandler {
    *
    * @return an authorized Gmail client service
    */
-  public static Gmail getGmailService() throws IOException {
+  static Gmail getGmailService() throws IOException {
     Credential credential = authorize();
     return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME)
