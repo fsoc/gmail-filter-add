@@ -14,6 +14,10 @@ gradle test
 # run
 gradle run -PappArgs="['example.com']"
 
+or
+
+build/install/gmailFilterAdd/bin/gmailFilterAdd -PappArgs"['example.com']"
+
 
 # config
 src/main/resources/client_secret.json
