@@ -12,7 +12,8 @@ When registering an email at shadything.com the user who owns the domain example
 gradle test
 
 # run
-gradle run
+gradle run -PappArgs="['example.com']"
+
 
 # config
 src/main/resources/client_secret.json
