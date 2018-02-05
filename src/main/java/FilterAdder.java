@@ -29,6 +29,7 @@ class FilterAdder {
     Optional<String> filterIdFromCriteria = getFilterIdFromCriteria(getMonthlyFilter());
 
     if (filterIdFromCriteria.isPresent()) {
+      System.out.println("Filter already present");
       return filterIdFromCriteria.get();
     } else {
       Filter filter = new Filter()
@@ -38,6 +39,7 @@ class FilterAdder {
                       .setAddLabelIds(Collections.singletonList(labelId))
                       .setRemoveLabelIds(Arrays.asList("INBOX", "UNREAD")));
       Filter result = service.users().settings().filters().create(USER_ID, filter).execute();
+      System.out.println("Created filter");
       return result.getId();
     }
   }
