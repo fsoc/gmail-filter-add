@@ -23,7 +23,6 @@ public class FilterAdderTest {
 
   @Test
   public void getAndDeleteLabel() throws IOException {
-    Gmail gmailService = GmailHandler.getGmailService();
     FilterAdder filterAdder = new FilterAdder(gmailService);
     String junk = filterAdder.getLabelId("Junk").orElseThrow(IllegalArgumentException::new);
     String filterId = filterAdder.createFilter(junk);

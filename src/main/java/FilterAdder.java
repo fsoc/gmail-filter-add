@@ -41,16 +41,14 @@ class FilterAdder {
   public Optional<String> getLabelId(String name) throws IOException {
     ListLabelsResponse listResponse = service.users().labels().list(USER_ID).execute();
     List<Label> labels = listResponse.getLabels();
-    if (labels.size() == 0) {
-      System.out.println("No labels found.");
-    } else {
-      System.out.println("Labels:");
-      for (Label label : labels) {
-        if (label.getName().equals(name)) {
-          return of(label.getId());
-        }
+
+    for (Label label : labels) {
+      if (label.getName().equals(name)) {
+        return of(label.getId());
       }
     }
+
+    System.out.println("No labels found for name:" + name);
     return Optional.empty();
   }
 }
