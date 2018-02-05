@@ -8,7 +8,9 @@ class Main {
     // Build a new authorized API client service.
     Gmail gmailService = GmailHandler.getGmailService();
     if (args.length == 1) {
-      new FilterAdder(gmailService, args[0]);
+      FilterAdder filterAdder = new FilterAdder(gmailService, args[0]);
+      String junk = filterAdder.getLabelId("Junk").orElseThrow(IllegalArgumentException::new);
+      filterAdder.createFilter(junk);
     } else {
       System.out.println("usage: gradle run -PappArgs=\"['example.com']\"");
 
